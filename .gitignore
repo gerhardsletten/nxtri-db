@@ -1,0 +1,14 @@
+.idea/
+node_modules/
+dist/
+public
+*.iml
+webpack-assets.json
+webpack-stats.json
+npm-debug.log
+package-lock.json
+jsconfig.json
+typings.json
+typings/
+public
+.env

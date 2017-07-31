@@ -1,0 +1,195 @@
+{
+  "name": "nxtridb-frontend",
+  "description": "Homepage for x",
+  "author": "Gerhard Sletten",
+  "license": "MIT",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gerhardsletten/nxtri-db"
+  },
+  "homepage": "https://github.com/gerhardsletten/nxtri-db",
+  "keywords": [],
+  "standard": {
+    "parser": "babel-eslint",
+    "globals": [
+      "__DEVELOPMENT__",
+      "webpackIsomorphicTools",
+      "__DISABLE_SSR__",
+      "__DEVTOOLS__",
+      "__CLIENT__",
+      "__SERVER__"
+    ]
+  },
+  "main": "bin/server.js",
+  "scripts": {
+    "start": "concurrently --kill-others \"npm run start-prod\" \"npm run start-prod-api\"",
+    "start-prod": "better-npm-run start-prod",
+    "start-prod-api": "better-npm-run start-prod-api",
+    "build": "better-npm-run build",
+    "postinstallx": "npm run build",
+    "lint": "eslint -c .eslintrc src api",
+    "start-dev": "better-npm-run start-dev",
+    "start-dev-api": "better-npm-run start-dev-api",
+    "watch-client": "better-npm-run watch-client",
+    "prod": "concurrently --kill-others \"npm run start-prod\" \"npm run start-prod-api\"",
+    "dev": "concurrently --kill-others \"npm run watch-client\" \"npm run start-dev\" \"npm run start-dev-api\"",
+    "test": "karma start",
+    "setup": "npm install && node setup.js",
+    "test-node": "./node_modules/mocha/bin/mocha $(find api -name '*-test.js') --compilers js:babel-core/register",
+    "test-node-watch": "./node_modules/mocha/bin/mocha $(find api -name '*-test.js') --compilers js:babel-core/register --watch"
+  },
+  "betterScripts": {
+    "start-prod": {
+      "command": "node ./bin/server.js",
+      "env": {
+        "NODE_PATH": "./src",
+        "NODE_ENV": "production",
+        "PORT": 8080,
+        "APIPORT": 3030
+      }
+    },
+    "start-prod-api": {
+      "command": "node ./bin/api.js",
+      "env": {
+        "NODE_PATH": "./api",
+        "NODE_ENV": "production",
+        "APIPORT": 3030
+      }
+    },
+    "start-dev": {
+      "command": "node ./bin/server.js",
+      "env": {
+        "NODE_PATH": "./src",
+        "NODE_ENV": "development",
+        "PORT": 3000,
+        "APIPORT": 3030
+      }
+    },
+    "start-dev-api": {
+      "command": "node ./bin/api.js",
+      "env": {
+        "NODE_PATH": "./api",
+        "NODE_ENV": "development",
+        "APIPORT": 3030
+      }
+    },
+    "watch-client": {
+      "command": "node webpack/webpack-dev-server.js",
+      "env": {
+        "UV_THREADPOOL_SIZE": 100,
+        "NODE_PATH": "./src",
+        "PORT": 3000,
+        "APIPORT": 3030
+      }
+    },
+    "build": {
+      "command": "webpack --hide-modules --progress --display-error-details --config webpack/prod.config.js",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  },
+  "dependencies": {
+    "axios": "^0.16.2",
+    "babel-core": "^6.25.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-react-display-name": "^6.25.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-register": "^6.24.1",
+    "babel-runtime": "^6.23.0",
+    "better-npm-run": "0.0.15",
+    "body-parser": "^1.17.2",
+    "classnames": "^2.2.5",
+    "compression": "^1.6.2",
+    "concat-stream": "^1.6.0",
+    "concurrently": "^3.5.0",
+    "cookie-parser": "^1.4.3",
+    "core-js": "2.4.1",
+    "date-fns": "^1.28.5",
+    "deep-equal": "^1.0.1",
+    "express": "^4.15.3",
+    "express-session": "^1.15.3",
+    "hoist-non-react-statics": "^1.2.0",
+    "html-to-react": "^1.2.11",
+    "http-proxy": "^1.16.2",
+    "immutability-helper": "^2.2.2",
+    "invariant": "^2.2.2",
+    "is-equal-shallow": "^0.1.3",
+    "jsdom": "^11.0.0",
+    "jsonwebtoken": "^7.4.1",
+    "lru-memoize": "^1.0.2",
+    "map-props": "^1.0.0",
+    "object.omit": "^2.0.1",
+    "object.pick": "^1.2.0",
+    "piping": "1.0.0-rc.4",
+    "pretty-error": "^2.1.1",
+    "promise-mysql": "^3.0.2",
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-addons-update": "^15.6.0",
+    "react-breadcrumbs": "^1.6.6",
+    "react-dom": "^15.6.1",
+    "react-helmet": "^5.1.3",
+    "react-hot-loader": "^3.0.0-beta.7",
+    "react-redux": "^5.0.5",
+    "react-router": "3.0.5",
+    "react-router-redux": "^4.0.8",
+    "redux": "^3.7.0",
+    "redux-connect": "^5.1.0",
+    "redux-thunk": "^2.2.0",
+    "serialize-javascript": "^1.3.0",
+    "serve-favicon": "^2.4.3",
+    "styled-components": "^2.1.1",
+    "superagent": "^3.5.2",
+    "uncss": "^0.14.1",
+    "uuid": "^3.1.0",
+    "webpack": "^2.6.1",
+    "webpack-isomorphic-tools": "^3.0.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.1.0",
+    "babel-plugin-react-transform": "^2.0.2",
+    "babel-plugin-typecheck": "^3.9.0",
+    "caniuse-db": "^1.0.30000693",
+    "clean-webpack-plugin": "^0.1.16",
+    "css-loader": "^0.28.4",
+    "cssnano": "^3.10.0",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-config-standard-react": "^5.0.0",
+    "eslint-plugin-import": "^2.5.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-react": "^7.1.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "extract-text-webpack-plugin": "^2.1.2",
+    "file-loader": "^0.11.2",
+    "json-loader": "^0.5.4",
+    "optimize-css-assets-webpack-plugin": "^2.0.0",
+    "postcss-apply": "^0.8.0",
+    "postcss-cssnext": "^2.11.0",
+    "postcss-import": "^10.0.0",
+    "postcss-loader": "^2.0.6",
+    "react-addons-test-utils": "^15.6.0",
+    "react-transform-catch-errors": "^1.0.2",
+    "react-transform-hmr": "^1.0.4",
+    "redbox-react": "^1.4.2",
+    "standard": "^10.0.2",
+    "style-loader": "^0.18.2",
+    "url-loader": "^0.5.9",
+    "webpack-bundle-analyzer": "^2.8.3",
+    "webpack-common-shake": "^1.5.3",
+    "webpack-dev-middleware": "^1.11.0",
+    "webpack-hot-middleware": "^2.18.0"
+  },
+  "engines": {
+    "node": "8.x"
+  }
+}
