@@ -33,7 +33,6 @@ const Th = styled(Td)`
 @asyncConnect([{
   promise: ({store: {dispatch, getState}, location: {query}}) => {
     const promises = []
-    console.log('asyncConnect', query)
     if (!isLoaded(getState(), query)) {
       promises.push(dispatch(load(query)))
     }
