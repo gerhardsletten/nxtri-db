@@ -71,12 +71,12 @@ export default class Results extends Component {
             <thead>
               <tr>
                 <Th>Name</Th>
-                <Th>Reward</Th>
                 {results[0].segments.map(({name}, j) => {
                   return (
                     <Th key={j}>{name}</Th>
                   )
                 })}
+                <Th>Reward</Th>
                 <Th>FinishTime</Th>
               </tr>
             </thead>

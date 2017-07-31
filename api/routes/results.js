@@ -37,24 +37,17 @@ const getRaces = async () => {
   }
 }
 
-const getClasses = async () => {
-  try {
-    // const connection = await pool.getConnection()
-    // const data = await connection.query(`SELECT * FROM gender;`)
-    // pool.releaseConnection(connection)
-    return [{
-      name: 'All',
-      id: null
-    }, {
-      name: 'Women',
-      id: 'F'
-    }, {
-      name: 'Male',
-      id: 'M'
-    }]
-  } catch (error) {
-    throw error
-  }
+const getClasses = () => {
+  return [{
+    name: 'All',
+    id: null
+  }, {
+    name: 'Women',
+    id: 'F'
+  }, {
+    name: 'Male',
+    id: 'M'
+  }]
 }
 
 const getRace = async ({raceId, genderClass = null}) => {
@@ -101,7 +94,6 @@ const getRace = async ({raceId, genderClass = null}) => {
       }]
     }, [])
     pool.releaseConnection(connection)
-    console.log(query)
     return tranformQuery(data)
   } catch (error) {
     throw error
@@ -110,7 +102,6 @@ const getRace = async ({raceId, genderClass = null}) => {
 
 function read (req, res) {
   const {query: {raceId, genderClass}} = req
-  console.log('read', raceId, genderClass)
   const races = getRaces()
   const classes = getClasses()
   const results = races.then((_races) => {
@@ -122,7 +113,6 @@ function read (req, res) {
     results
   ])
   .then(([races, classes, results]) => {
-    console.log('send', raceId, genderClass)
     const params = {
       raceId: raceId || races[0].id,
       genderClass
