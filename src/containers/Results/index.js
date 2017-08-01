@@ -1,23 +1,24 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {asyncConnect} from 'redux-connect'
-import {Link} from 'react-router'
+import {replace} from 'react-router-redux'
 import Helmet from 'react-helmet'
 import styled from 'styled-components'
+import {Select, Label, Switch} from 'rebass'
 
 import {isLoaded, load} from 'redux/modules/results'
-
-const NavLink = styled(Link)`
-  display: inline-block;
-  color: ${props => props.selected ? 'black' : props.theme.link};
-  text-decoration: ${props => props.selected ? 'none' : 'underline'};
-  margin-right: 0.5rem;
-`
 
 const Table = styled.table`
   border-collapse: collapse;
   width: 100%;
   border: 1px solid #ccc;
+`
+
+const TBody = styled.tbody`
+  width: 100%;
+`
+const THead = styled.thead`
+  width: 100%;
 `
 
 const Td = styled.td`
@@ -28,6 +29,20 @@ const Td = styled.td`
 const Th = styled(Td)`
   font-weight: bold;
   background: #f2f2f2;
+`
+
+const NavWrapper = styled.div`
+  margin: 0 1rem .5rem 0;
+  display: inline-flex;
+  align-items: center;
+`
+
+const Inline = styled(NavWrapper)`
+  margin-right: .5rem;
+`
+
+const CustomLabel = styled(Label)`
+  margin-right: .5rem;
 `
 
 @asyncConnect([{
@@ -42,32 +57,77 @@ const Th = styled(Td)`
 @connect(
   (state) => ({
     results: state.results.data,
-    error: state.results.error
-  })
+    error: state.results.error,
+    loading: !state.reduxAsyncConnect.loaded
+  }), {
+    replace
+  }
 )
 export default class Results extends Component {
+  onChangeRace = (event) => {
+    const {replace, location: {pathname, query}} = this.props
+    replace({pathname, query: {...query, raceId: event.target.value}})
+  }
+  onChangeClass = (event) => {
+    const {replace, location: {pathname, query}} = this.props
+    replace({pathname, query: {...query, genderClass: event.target.value}})
+  }
+  onChangeCrewToggle = (event) => {
+    const {replace, location: {pathname, query}} = this.props
+    replace({pathname, query: {...query, showCrew: query.showCrew && query.showCrew === '1' ? null : '1'}})
+  }
   render () {
-    const {results: {races, classes, results, params = {}}, error, location: {pathname, query}} = this.props
+    const {results: {races, classes, results, params = {}}, error, location: {query}, loading} = this.props
     const selectedRaceId = params.raceId || null
     const selectedClassesId = params.genderClass || null
-    const selectedRace = selectedRaceId && races ? races.find(({id}) => id === query.raceId) : null
+    const showCrew = query.showCrew ? query.showCrew === '1' : null
+    const selectedRace = selectedRaceId && races ? races.find(({id}) => id === selectedRaceId) : null
     return (
       <div>
         <Helmet title={`Results ${selectedRace ? `for ${selectedRace.name}` : ''}`} />
+        <div>
+          {races && (
+            <NavWrapper>
+              <Inline>
+                <Label>Races</Label>
+              </Inline>
+              <Inline>
+                <Select onChange={this.onChangeRace} value={selectedRaceId || ''}>
+                  {races.filter(({isCrew}) => showCrew ? true : !isCrew).map(({id, name, isCrew}, i) => <option key={i} value={id}>{`${name} ${isCrew ? 'Crew-race' : ''}   `}</option>)}
+                </Select>
+              </Inline>
+            </NavWrapper>
+          )}
+          {classes && (
+            <NavWrapper>
+              <Inline>
+                <Label>Classes</Label>
+              </Inline>
+              <Inline>
+                <Select onChange={this.onChangeClass} value={selectedClassesId || ''}>
+                  {classes.map(({id, name}, i) => <option key={i} value={id}>{name}</option>)}
+                </Select>
+              </Inline>
+            </NavWrapper>
+          )}
+          {races && (
+            <NavWrapper>
+              <Inline>
+                <CustomLabel>Include crew-race</CustomLabel>
+                <Switch
+                  checked={showCrew}
+                  onClick={this.onChangeCrewToggle}
+                />
+              </Inline>
+            </NavWrapper>
+          )}
+          {results && !!results.length && <Inline><Label>({results.length} athletes)</Label></Inline>}
+        </div>
+        {loading && <p>Loading</p>}
         {error && <p>Error: {error}</p>}
-        {races && (
-          <p>
-            <strong>Races:</strong> {races.map(({id, name}, i) => <NavLink key={i} to={{pathname, query: {...query, raceId: id}}} selected={selectedRaceId === id}>{name}</NavLink>)}
-          </p>
-        )}
-        {classes && (
-          <p>
-            <strong>Klasses:</strong> {classes.map(({id, name}, i) => <NavLink key={i} to={{pathname, query: {...query, genderClass: id}}} selected={selectedClassesId === id}>{name}</NavLink>)}
-          </p>
-        )}
-        {results && !!results.length && (
+        {!loading && results && !!results.length && (
           <Table>
-            <thead>
+            <THead>
               <tr>
                 <Th>Name</Th>
                 {results[0].segments.map(({name}, j) => {
@@ -78,12 +138,12 @@ export default class Results extends Component {
                 <Th>Reward</Th>
                 <Th>FinishTime</Th>
               </tr>
-            </thead>
-            <tbody>
+            </THead>
+            <TBody>
               {results.map((athlete, i) => {
                 return (
                   <tr key={i}>
-                    <Td>{athlete.first_name} {athlete.last_name} ({athlete.gender_code}</Td>
+                    <Td>{athlete.first_name} {athlete.last_name} ({athlete.gender_code})</Td>
                     {athlete.segments.map(({time}, j) => {
                       return (
                         <Td key={j}>{time}</Td>
@@ -94,7 +154,7 @@ export default class Results extends Component {
                   </tr>
                 )
               })}
-            </tbody>
+            </TBody>
           </Table>
         )}
         {results && !results.length && (

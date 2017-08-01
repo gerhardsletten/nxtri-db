@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {asyncConnect} from 'redux-connect'
 import {push} from 'react-router-redux'
 import {Link} from 'react-router'
+import {Provider} from 'rebass'
 
 import {isLoaded as isAuthLoaded, load as loadAuth, logout} from '../../redux/modules/auth'
 import {routes} from 'routes'
@@ -91,20 +92,22 @@ export default class App extends Component {
     const {user} = this.props
     return (
       <ThemeProvider theme={theme}>
-        <Wrapper>
-          {user && (
-            <nav>
-              <Link to={routes.home}>Home</Link>
-              <Link to={routes.results}>Results</Link>
-              <Link to={routes.secret}>Secret</Link>
-              <span>Logged in as {user.username}</span>
-              <button onClick={this.handleLogout}>Logout</button>
-            </nav>
-          )}
-          <Main>
-            {this.props.children}
-          </Main>
-        </Wrapper>
+        <Provider>
+          <Wrapper>
+            {user && (
+              <nav>
+                <Link to={routes.home}>Home</Link>
+                <Link to={routes.results}>Results</Link>
+                <Link to={routes.secret}>Secret</Link>
+                <span>Logged in as {user.username}</span>
+                <button onClick={this.handleLogout}>Logout</button>
+              </nav>
+            )}
+            <Main>
+              {this.props.children}
+            </Main>
+          </Wrapper>
+        </Provider>
       </ThemeProvider>
     )
   }

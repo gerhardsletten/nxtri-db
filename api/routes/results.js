@@ -29,7 +29,8 @@ const getRaces = async () => {
     return tranformQuery(data).map(({id, date, competition, edition}) => {
       return {
         id: `${id}`,
-        name: `${format(parse(date), 'YYYY')} ${competition}${edition === 'Crew' ? 'Crew' : ''}`
+        name: `${format(parse(date), 'YYYY')} ${competition}`,
+        isCrew: edition === 'Crew'
       }
     })
   } catch (error) {
@@ -39,13 +40,13 @@ const getRaces = async () => {
 
 const getClasses = () => {
   return [{
-    name: 'All',
+    name: 'Women and Men',
     id: null
   }, {
-    name: 'Women',
+    name: 'Women only',
     id: 'F'
   }, {
-    name: 'Male',
+    name: 'Men only',
     id: 'M'
   }]
 }
