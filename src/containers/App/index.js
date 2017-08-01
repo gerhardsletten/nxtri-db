@@ -95,7 +95,7 @@ export default class App extends Component {
           {user && (
             <nav>
               <Link to={routes.home}>Home</Link>
-              <Link to={routes.results}>Maps</Link>
+              <Link to={routes.results}>Results</Link>
               <Link to={routes.secret}>Secret</Link>
               <span>Logged in as {user.username}</span>
               <button onClick={this.handleLogout}>Logout</button>
@@ -104,10 +104,6 @@ export default class App extends Component {
           <Main>
             {this.props.children}
           </Main>
-          <Footer>
-            lorem ipusm
-            {!user && <Link to={routes.login}>Login</Link>}
-          </Footer>
         </Wrapper>
       </ThemeProvider>
     )
