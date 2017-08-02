@@ -11,6 +11,7 @@ import ApiClient from './helpers/ApiClient'
 import Html from './helpers/Html'
 import PrettyError from 'pretty-error'
 import http from 'http'
+import LRUCache from 'lru-cache'
 
 import {match} from 'react-router'
 import {syncHistoryWithStore} from 'react-router-redux'
@@ -18,6 +19,11 @@ import {ReduxAsyncConnect, loadOnServer} from 'redux-connect'
 import createHistory from 'react-router/lib/createMemoryHistory'
 import {Provider} from 'react-redux'
 import getRoutes from './routes'
+
+const ssrCache = new LRUCache({
+  max: 100,
+  maxAge: 3600 // 1 hour
+})
 
 const targetUrl = 'http://' + config.apiHost + ':' + config.apiPort
 const pretty = new PrettyError()
@@ -27,6 +33,8 @@ const proxy = httpProxy.createProxyServer({
   target: targetUrl,
   ws: true
 })
+
+const getCacheKey = (req) => `${req.url}`
 
 app.use(compression())
 app.use(favicon(path.join(__dirname, '..', 'static', 'favicon.ico')))
@@ -56,6 +64,13 @@ app.use((req, res) => {
     // hot module replacement is enabled in the development env
     webpackIsomorphicTools.refresh()
   }
+  const key = getCacheKey(req)
+  if (ssrCache.has(key) && !__DEVELOPMENT__) {
+    console.log('cache hit', key, __DEVELOPMENT__)
+    res.send(ssrCache.get(key))
+    return
+  }
+
   const client = new ApiClient(req)
   const memoryHistory = createHistory(req.originalUrl)
   const store = createStore(memoryHistory, client)
@@ -86,10 +101,13 @@ app.use((req, res) => {
         )
 
         global.navigator = {userAgent: req.headers['user-agent']}
-        res.send(
-          '<!doctype html>\n' +
-          ReactDOM.renderToString(<Html assets={webpackIsomorphicTools.assets()} component={component} store={store} />)
+        const html = '<!doctype html>\n' + ReactDOM.renderToString(<Html assets={webpackIsomorphicTools.assets()} component={component} store={store} />
         )
+        if (!__DEVELOPMENT__) {
+          console.log(`CACHE MISS: ${key}`)
+          ssrCache.set(key, html)
+        }
+        res.send(html)
       })
     } else {
       res.status(404).send('Not found')

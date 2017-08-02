@@ -70,6 +70,7 @@ export default class Results extends Component {
           <Title>Choose a race</Title>
           <Box>
             <MySelect onChange={this.onChangeRace}>
+              <option value='0'>Select a race</option>
               {races && races.map(({id, ...race}, i) => <option key={i} value={id}>{raceName(race)}</option>)}
             </MySelect>
           </Box>
@@ -169,18 +170,4 @@ const MySelect = styled(Select)`
     box-shadow: none !important;
     outline: none;
   }
-`
-
-const NavWrapper = styled.div`
-  margin: 0 1rem .5rem 0;
-  display: inline-flex;
-  align-items: center;
-`
-
-const Inline = styled(NavWrapper)`
-  margin-right: .5rem;
-`
-
-const CustomLabel = styled(Label)`
-  margin-right: .5rem;
 `
