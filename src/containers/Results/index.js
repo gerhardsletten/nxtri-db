@@ -5,10 +5,10 @@ import equal from 'deep-equal'
 import {Link} from 'react-router'
 import {replace} from 'react-router-redux'
 import styled from 'styled-components'
-import {Select, Label, Toolbar, NavLink, Arrow, Container, Fixed, Drawer, Divider, Button} from 'rebass'
+import {Select, Toolbar, NavLink, Arrow, Container, Fixed, Drawer, Divider, Button} from 'rebass'
 import {BarLoader} from 'react-css-loaders'
 
-import {CenterWrapper, Title, Box, TextOverflow, ScrollOverflow, FaceIn, Table, TBody, THead, Td, Th, TextCenter} from 'components'
+import {CenterWrapper, Title, Box, TextOverflow, ScrollOverflow, FadeIn, Table, TBody, THead, Td, Th, TextCenter} from 'components'
 import {isLoaded, load} from 'redux/modules/results'
 
 const raceName = ({year, competition, edition}) => `${year} ${competition} ${edition !== 'Normal' ? ` (${edition})` : ''}`
@@ -66,7 +66,7 @@ export default class Results extends Component {
     const {results: {races}} = this.props
     return (
       <CenterWrapper>
-        <FaceIn>
+        <FadeIn>
           <Title>Choose a race</Title>
           <Box>
             <MySelect onChange={this.onChangeRace}>
@@ -74,17 +74,17 @@ export default class Results extends Component {
               {races && races.map(({id, ...race}, i) => <option key={i} value={id}>{raceName(race)}</option>)}
             </MySelect>
           </Box>
-        </FaceIn>
+        </FadeIn>
       </CenterWrapper>
     )
   }
   renderLoading () {
     return (
       <CenterWrapper>
-        <FaceIn>
+        <FadeIn>
           <BarLoader color='#fff' />
           <p>Loading</p>
-        </FaceIn>
+        </FadeIn>
       </CenterWrapper>
     )
   }

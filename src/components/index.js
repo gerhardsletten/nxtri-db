@@ -13,7 +13,6 @@ export const Main = styled.main`
 `
 
 export const CenterWrapper = styled(Wrapper)`
-  padding: 1rem;
   align-items: center;
   text-align: center;
   justify-content: center;
@@ -59,7 +58,7 @@ export const ScrollOverflow = styled.div`
   overflow: auto;
 `
 
-export const FaceIn = styled.div`
+export const FadeIn = styled.div`
   animation: ${fadeIn} .3s linear 1;
 `
 
