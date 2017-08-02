@@ -24,13 +24,14 @@ const getRaces = async () => {
       FROM race as r
       join competition as c on r.competition_id = c.id
       join edition as e on r.edition_id = e.id
-      ORDER BY 2;`)
+      ORDER BY 2 DESC;`)
     pool.releaseConnection(connection)
     return tranformQuery(data).map(({id, date, competition, edition}) => {
       return {
         id: `${id}`,
-        name: `${format(parse(date), 'YYYY')} ${competition}`,
-        isCrew: edition === 'Crew'
+        year: format(parse(date), 'YYYY'),
+        competition,
+        edition
       }
     })
   } catch (error) {
@@ -103,19 +104,14 @@ const getRace = async ({raceId, genderClass = null}) => {
 
 function read (req, res) {
   const {query: {raceId, genderClass}} = req
-  const races = getRaces()
-  const classes = getClasses()
-  const results = races.then((_races) => {
-    return getRace({raceId: raceId || _races[0].id, genderClass: genderClass})
-  })
   Promise.all([
-    races,
-    classes,
-    results
+    getRaces(),
+    getClasses(),
+    raceId ? getRace({raceId: raceId, genderClass: genderClass}) : Promise.resolve(null)
   ])
   .then(([races, classes, results]) => {
     const params = {
-      raceId: raceId || races[0].id,
+      raceId,
       genderClass
     }
     res.send({races, classes, results, params})

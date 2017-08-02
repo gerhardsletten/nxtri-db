@@ -7,6 +7,7 @@ import {push} from 'react-router-redux'
 import {Link} from 'react-router'
 import {Provider} from 'rebass'
 
+import {Wrapper, Main} from 'components'
 import {isLoaded as isAuthLoaded, load as loadAuth, logout} from '../../redux/modules/auth'
 import {routes} from 'routes'
 
@@ -14,35 +15,33 @@ const theme = {
   primary: 'red',
   link: 'blue'
 }
+const rebassTheme = {
+  font: '"Avenir Next", Helvetica, sans-serif',
+  fontSizes: [
+    12, 16, 24, 36, 48, 72
+  ]
+}
 
 injectGlobal`
   * {
-    font-family: Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace, serif;
+    font-family: "Avenir Next", Helvetica, sans-serif;
     margin: 0;
     padding: 0;
+    color: inherit;
+    font-size: inherit;
+    font-weight: 300;
+  }
+  html {
+    font-size: 62.5%;
   }
   body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    background: #263238;
+    color: #fff;
+    font-size: 1.8rem;
   }
-`
-
-const Wrapper = styled.div`
-  display: flex;
-  min-height: 100vh;
-  width: 100%;
-  flex-direction: column;
-`
-
-const Main = styled.main`
-  flex: 1;
-  padding: 1rem;
-`
-
-const Footer = styled.footer`
-  background: #ccc;
-  padding: 1rem;
 `
 
 @asyncConnect([{
@@ -92,7 +91,7 @@ export default class App extends Component {
     const {user} = this.props
     return (
       <ThemeProvider theme={theme}>
-        <Provider>
+        <Provider theme={rebassTheme}>
           <Wrapper>
             {user && (
               <nav>
