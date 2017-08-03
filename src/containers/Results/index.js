@@ -6,7 +6,7 @@ import {Link} from 'react-router'
 import {replace} from 'react-router-redux'
 import styled from 'styled-components'
 import {Select, Toolbar, NavLink, Arrow, Container, Fixed, Drawer, Divider, Button} from 'rebass'
-import {BarLoader} from 'react-css-loaders'
+import BarLoader from '@gerhardsletten/react-css-loaders/dist/bar/BarLoader'
 
 import {CenterWrapper, Title, Box, TextOverflow, ScrollOverflow, FadeIn, Table, TBody, THead, Td, Th, TextCenter} from 'components'
 import {isLoaded, load} from 'redux/modules/results'
