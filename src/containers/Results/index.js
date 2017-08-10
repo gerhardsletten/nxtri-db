@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {asyncConnect} from 'redux-connect'
 import equal from 'deep-equal'
 import {Link} from 'react-router'
-import {replace} from 'react-router-redux'
+import {push} from 'react-router-redux'
 import styled from 'styled-components'
 import {Select, Toolbar, NavLink, Arrow, Container, Fixed, Drawer, Divider, Button} from 'rebass'
 import BarLoader from '@gerhardsletten/react-css-loaders/dist/bar/BarLoader'
@@ -28,7 +28,7 @@ const raceName = ({year, competition, edition}) => `${year} ${competition} ${edi
     error: state.results.error,
     loading: !state.reduxAsyncConnect.loaded
   }), {
-    replace
+    push
   }
 )
 export default class Results extends Component {
@@ -41,16 +41,16 @@ export default class Results extends Component {
     }
   }
   onChangeRace = (event) => {
-    const {replace, location: {pathname, query}} = this.props
-    replace({pathname, query: {...query, raceId: event.target.value}})
+    const {push, location: {pathname, query}} = this.props
+    push({pathname, query: {...query, raceId: event.target.value}})
   }
   onChangeClass = (event) => {
-    const {replace, location: {pathname, query}} = this.props
-    replace({pathname, query: {...query, genderClass: event.target.value}})
+    const {push, location: {pathname, query}} = this.props
+    push({pathname, query: {...query, genderClass: event.target.value}})
   }
   onChangeCrewToggle = (event) => {
-    const {replace, location: {pathname, query}} = this.props
-    replace({pathname, query: {...query, showCrew: query.showCrew && query.showCrew === '1' ? null : '1'}})
+    const {push, location: {pathname, query}} = this.props
+    push({pathname, query: {...query, showCrew: query.showCrew && query.showCrew === '1' ? null : '1'}})
   }
   render () {
     const {results: {results}, loading, location: {query}} = this.props
@@ -105,7 +105,7 @@ export default class Results extends Component {
     return (
       <div>
         <Toolbar mb={2} pl={1} pr={1} bg='#263238'>
-          <NavLink mr='auto'><span>{selectedRace && raceName(selectedRace)} ({results.length})</span></NavLink>
+          <NavLink mr='auto'><span>{selectedRace && raceName(selectedRace)} ({results.length} athletes found)</span></NavLink>
           <NavLink ml='auto' onClick={this.toggleMenu}><span>Menu <Arrow direction='down' color='#fff' /></span></NavLink>
         </Toolbar>
         {showMenu && <Fixed top right bottom left onClick={this.toggleMenu} />}

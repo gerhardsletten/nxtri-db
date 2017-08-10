@@ -65,7 +65,7 @@ const getRace = async ({raceId, genderClass = null}) => {
       join sport as sport on sport.sport_id=sr.sport_id
       join course as c on c.course_id=s2p.course_id
       join gender as g on g.id=a.gender_id
-      WHERE ${genderClass ? `g.gender_code='?' and` : ''} r.id=? order by 7,4;`
+      WHERE ${genderClass ? `g.gender_code=? and` : ''} r.id=? order by 7,4;`
     const extra = genderClass ? [genderClass] : []
     const sql = mysql.format(query, [...extra, raceId])
     const data = await connection.query(sql).reduce((results, {xtri_id: xtriId, first_name, last_name, gender_code, finishtime, reward, id, ...rest}) => {
