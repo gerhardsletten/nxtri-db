@@ -102,6 +102,7 @@ export default class Results extends Component {
     const selectedClassesId = query.genderClass || null
     const hasResults = results && !!results.length
     const selectedRace = races ? races.find(({id}) => id === query.raceId) : null
+    const segments = hasResults ? results[0].segments.map(({name}) => name) : null
     return (
       <div>
         <Toolbar mb={2} pl={1} pr={1} bg='#263238'>
@@ -130,11 +131,7 @@ export default class Results extends Component {
               <THead>
                 <tr>
                   <Th>Name</Th>
-                  {results[0].segments.map(({name}, j) => {
-                    return (
-                      <Th key={j}>{name}</Th>
-                    )
-                  })}
+                  {segments.map((name, j) => <Th key={j}>{name}</Th>)}
                   <Th>Reward</Th>
                   <Th>FinishTime</Th>
                 </tr>
@@ -144,9 +141,10 @@ export default class Results extends Component {
                   return (
                     <tr key={i}>
                       <Td><TextOverflow>{athlete.first_name} {athlete.last_name} ({athlete.gender_code})</TextOverflow></Td>
-                      {athlete.segments.map(({time}, j) => {
+                      {segments.map((name, j) => {
+                        const athleteSegment = athlete.segments.find((item) => item.name === name)
                         return (
-                          <Td key={j}>{time}</Td>
+                          <Td key={j}>{athleteSegment ? athleteSegment.time : 'n/a'}</Td>
                         )
                       })}
                       <Td><TextOverflow>{athlete.reward}</TextOverflow></Td>

@@ -15,8 +15,8 @@ function formatUrl (path) {
 
 export default class ApiClient {
   constructor (req) {
-    methods.forEach((method) => {
-      this[method] = (path, { params, data } = {}) => new Promise((resolve, reject) => {
+    const myMethod = (method) => {
+      return (path, { params, data } = {}) => new Promise((resolve, reject) => {
         const request = superagent[method](formatUrl(path))
         request.timeout(config.apiTimeout)
 
@@ -39,7 +39,11 @@ export default class ApiClient {
           err ? reject((body && body.error) ? body.error : body || err) : resolve(body)
         })
       })
-    })
+    }
+    this.get = myMethod('get')
+    this.post = myMethod('post')
+    this.del = myMethod('del')
+    this.put = myMethod('put')
   }
   empty () {}
 }

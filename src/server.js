@@ -66,7 +66,6 @@ app.use((req, res) => {
   }
   const key = getCacheKey(req)
   if (ssrCache.has(key) && !__DEVELOPMENT__) {
-    console.log('cache hit', key, __DEVELOPMENT__)
     res.send(ssrCache.get(key))
     return
   }
@@ -104,7 +103,6 @@ app.use((req, res) => {
         const html = '<!doctype html>\n' + ReactDOM.renderToString(<Html assets={webpackIsomorphicTools.assets()} component={component} store={store} />
         )
         if (!__DEVELOPMENT__) {
-          console.log(`CACHE MISS: ${key}`)
           ssrCache.set(key, html)
         }
         res.send(html)

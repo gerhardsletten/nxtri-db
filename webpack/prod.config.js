@@ -105,7 +105,6 @@ module.exports = {
       }
     }),
     webpackIsomorphicToolsPlugin,
-    new ShakePlugin(),
-    new BundleAnalyzerPlugin()
-  ]
+    new ShakePlugin()
+  ].concat(process.env.BUILD_STATS === '1' ? [new BundleAnalyzerPlugin()] : [])
 }
